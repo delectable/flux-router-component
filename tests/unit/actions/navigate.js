@@ -67,6 +67,11 @@ describe('navigateAction', function () {
                     return route || null;
                 }
             },
+            slugManager: {
+                getNonSluggedFromSlugged: function(url) {
+                    return url;
+                }
+            },
             executeActionCalls: [],
             getAction: function () {
                 return fooAction;

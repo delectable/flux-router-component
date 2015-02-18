@@ -24,7 +24,16 @@ module.exports = function (context, payload, done) {
         method: payload.method
     };
 
-    var route = context.router.getRoute(payload.url, options);
+    var url = payload.url;
+    // If slugManager present, check for alternate url to check against router
+    if(context.slugManager && context.slugManager.getNonSluggedFromSlugged) {
+        var nonSluggedUrl = context.slugManager.getNonSluggedFromSlugged(payload.url);
+        if(nonSluggedUrl) {
+            url = nonSluggedUrl;
+        }
+    }
+
+    var route = context.router.getRoute(url, options);
 
     if (!route) {
         var err = new Error('Url does not exist');

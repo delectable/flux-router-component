@@ -25,6 +25,7 @@ module.exports = function (context, payload, done) {
     };
 
     var url = payload.url;
+    var originalUrl = url;
     // If slugManager present, check for alternate url to check against router
     if(context.slugManager && context.slugManager.getNonSluggedFromSlugged) {
         var nonSluggedUrl = context.slugManager.getNonSluggedFromSlugged(payload.url);
@@ -40,6 +41,12 @@ module.exports = function (context, payload, done) {
         err.status = 404;
         done(err);
         return;
+    }
+
+    // Store original/non-slugged url on route object to ensure correct route is displayed in URL bar
+    // IF we're showing the slugged-url (i.e., not in dev-mode)
+    if(typeof window !== 'undefined' && !window.location.pathname.match(/^\/internal/)) {
+        route.url = originalUrl;
     }
 
     // add parsed query parameter object to route object,

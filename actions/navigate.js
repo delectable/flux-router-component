@@ -45,7 +45,7 @@ module.exports = function (context, payload, done) {
 
     // Store original/non-slugged url on route object to ensure correct route is displayed in URL bar
     // IF we're showing the slugged-url (i.e., not in dev-mode)
-    if(typeof window !== 'undefined' && !window.location.pathname.match(/^\/internal|hashtag|search/)) {
+    if(typeof window !== 'undefined' && (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')) {
         route.url = originalUrl;
     }
 

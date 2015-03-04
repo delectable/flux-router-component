@@ -130,12 +130,23 @@ HistoryWithHash.prototype = {
             if (this._hasPushState) {
                 url = hash ? location.pathname + location.search + hash : null;
                 history.pushState(state, title, url);
+                this.setTitle(title);
             } else if (hash) {
                 location.hash = hash;
             }
         } else {
             if (this._hasPushState) {
-                history.pushState.apply(history, arguments);
+                try {
+                    // not calling pushState(state, title, url), because
+                    // some browsers update url with '/undefined' if url is undefined
+                    history.pushState.apply(history, arguments);
+                } catch (error) {
+                    // firefox 35 requires 3 args for pushState
+                    if (arguments.length < 3) {
+                        history.pushState(state, title, url);
+                    }
+                }
+                this.setTitle(title);
             } else if (url) {
                 location.href = url;
             }
@@ -164,16 +175,37 @@ HistoryWithHash.prototype = {
             if (this._hasPushState) {
                 url = hash ? (location.pathname + location.search + hash) : null;
                 history.replaceState(state, title, url);
+                this.setTitle(title);
             } else if (url) {
                 url = location.pathname + location.search + hash;
                 location.replace(url);
             }
         } else {
             if (this._hasPushState) {
-                history.replaceState.apply(history, arguments);
+                try {
+                    // not calling replaceState(state, title, url), because
+                    // some browsers update url with '/undefined' if url is undefined
+                    history.replaceState.apply(history, arguments);
+                } catch (error) {
+                    // firefox 35 requires 3 args for replaceState
+                    if (arguments.length < 3) {
+                        history.replaceState(state, title, url);
+                    }
+                }
+                this.setTitle(title);
             } else if (url) {
                 location.replace(url);
             }
+        }
+    },
+
+    /**
+     * Sets document title. No-op if title is empty.
+     * @param {String} title  The title string.
+     */
+    setTitle: function (title) {
+        if (title) {
+            this.win.document.title = title;
         }
     }
 };

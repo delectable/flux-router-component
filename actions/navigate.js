@@ -45,7 +45,7 @@ module.exports = function (context, payload, done) {
 
     // Store original/non-slugged url on route object to ensure correct route is displayed in URL bar
     // IF we're showing the slugged-url (i.e., not in dev-mode)
-    if(typeof window !== 'undefined' && (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')) {
+    if(typeof window !== 'undefined' && !originalUrl.match(/^\/delectaroute_/)) {
         route.url = originalUrl;
     }
 

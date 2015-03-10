@@ -38,6 +38,7 @@ module.exports = function (context, payload, done) {
 
     if (!route) {
         var err = new Error('Url does not exist');
+        debug('Url not found: ', url);
         err.status = 404;
         done(err);
         return;

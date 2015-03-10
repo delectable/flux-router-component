@@ -26,11 +26,15 @@ module.exports = function (context, payload, done) {
 
     var url = payload.url;
     var originalUrl = url;
+    // Don't use query string for slug mapping
+    var chunks = url.split("?");
+    var pathname = chunks[0];
+    var queryString = chunks[1] || '';
     // If slugManager present, check for alternate url to check against router
     if(context.slugManager && context.slugManager.getNonSluggedFromSlugged) {
-        var nonSluggedUrl = context.slugManager.getNonSluggedFromSlugged(payload.url);
+        var nonSluggedUrl = context.slugManager.getNonSluggedFromSlugged(pathname);
         if(nonSluggedUrl) {
-            url = nonSluggedUrl;
+            url = nonSluggedUrl + (queryString ? '?' + queryString : '');
         }
     }
 

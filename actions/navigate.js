@@ -41,6 +41,11 @@ module.exports = function (context, payload, done) {
     var route = context.router.getRoute(url, options);
 
     if (!route) {
+        // Check if popstate event and slugged url and trigger a full page load
+        if(typeof window !== 'undefined' && payload.type === 'popstate' && !url.match(/^\/delectaroute_/)) {
+            return window.location.href = url;
+        }
+
         var err = new Error('Url does not exist');
         debug('Url not found: ', url);
         err.status = 404;

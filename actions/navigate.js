@@ -46,11 +46,18 @@ module.exports = function (context, payload, done) {
             return window.location.href = url;
         }
 
-        var err = new Error('Url does not exist');
-        debug('Url not found: ', url);
-        err.status = 404;
-        done(err);
-        return;
+        var errorRoute = context.router.getRoute('/404', options);
+        // If 404 route available, render that
+        if(errorRoute) {
+            route = errorRoute;
+            route.url = originalUrl;
+        } else {
+            var err = new Error('Url does not exist');
+            debug('Url not found: ', url);
+            err.status = 404;
+            done(err);
+            return;
+        }
     }
 
     // Store original/non-slugged url on route object to ensure correct route is displayed in URL bar

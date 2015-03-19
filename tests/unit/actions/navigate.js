@@ -187,9 +187,9 @@ describe('navigateAction', function () {
 
     it ('should call back with a 404 error if route not found', function () {
         navigateAction(mockContext, {
-            url: '/404'
+            url: '/notaroute'
         }, function (err) {
-            expect(mockContext.routerCalls.length).to.equal(1);
+            expect(mockContext.routerCalls.length).to.equal(2);
             expect(err).to.be.an('object');
             expect(err.status).to.equal(404);
         });
@@ -200,7 +200,7 @@ describe('navigateAction', function () {
             url: '/post',
             method: 'get'
         }, function (err) {
-            expect(mockContext.routerCalls.length).to.equal(1);
+            expect(mockContext.routerCalls.length).to.equal(2);
             expect(err).to.be.an('object');
             expect(err.status).to.equal(404);
         });
